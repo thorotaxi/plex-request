@@ -86,12 +86,16 @@ const RequestModal: React.FC<RequestModalProps> = ({
           {/* Media Preview */}
           <div className="flex items-start space-x-4 mb-6">
             <div className="flex-shrink-0">
-              <ImageWithFallback
-                src={tmdbApi.getPosterUrl(selectedItem.poster_path)}
-                alt={getTitle()}
-                className="w-16 h-24 object-cover rounded"
-                fallbackSrc="/placeholder-poster.jpg"
-              />
+              <div className={`w-16 h-24 flex items-center justify-center rounded ${
+                selectedItem.media_type === 'movie' ? 'bg-red-50' : 'bg-indigo-50'
+              }`}>
+                <ImageWithFallback
+                  src={tmdbApi.getPosterUrl(selectedItem.poster_path)}
+                  alt={getTitle()}
+                  className="w-full h-full object-contain rounded"
+                  fallbackSrc="/placeholder-poster.svg"
+                />
+              </div>
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-medium text-gray-900 line-clamp-2">

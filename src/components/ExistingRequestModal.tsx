@@ -125,12 +125,16 @@ const ExistingRequestModal: React.FC<ExistingRequestModalProps> = ({
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
-                <ImageWithFallback
-                  src={tmdbApi.getPosterUrl(request.posterPath)}
-                  alt={request.title}
-                  className="w-20 h-28 object-cover rounded"
-                  fallbackSrc="/placeholder-poster.svg"
-                />
+                <div className={`w-24 h-36 flex items-center justify-center rounded ${
+                  request.type === 'movie' ? 'bg-red-50' : 'bg-indigo-50'
+                }`}>
+                  <ImageWithFallback
+                    src={tmdbApi.getPosterUrl(request.posterPath)}
+                    alt={request.title}
+                    className="w-full h-full object-contain rounded"
+                    fallbackSrc="/placeholder-poster.svg"
+                  />
+                </div>
               </div>
               
               <div className="flex-1">
@@ -139,15 +143,16 @@ const ExistingRequestModal: React.FC<ExistingRequestModalProps> = ({
                     {request.title}
                   </h3>
                   <div className="flex space-x-2 ml-2">
-                    {getTypeBadge(request.type)}
                     {getStatusBadge(request.status)}
                   </div>
                 </div>
                 
                 <div className="space-y-1 text-sm text-gray-600">
-                  <p>
-                    <span className="font-medium">Requested by:</span> {request.requesterName}
-                  </p>
+                  <div className="flex items-center space-x-2 mb-2">
+                    {getTypeBadge(request.type)}
+                    <span className="text-gray-500">•</span>
+                    <span>Requested by {request.requesterName}</span>
+                  </div>
                   <p>
                     <span className="font-medium">Requested on:</span> {formatDate(request.requestDate)}
                   </p>

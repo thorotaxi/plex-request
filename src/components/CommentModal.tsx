@@ -14,6 +14,15 @@ const CommentModal: React.FC<CommentModalProps> = ({
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const formatDate = (date: Date | string): string => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   // Reset form when modal opens/closes
   useEffect(() => {
     if (isOpen) {
@@ -22,19 +31,32 @@ const CommentModal: React.FC<CommentModalProps> = ({
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    console.log('CommentModal: handleSubmit called', { comment, request, isAdmin });
     
     if (!comment.trim()) {
       alert('Please enter a comment');
       return;
     }
 
-    if (!request) return;
+    if (!request) {
+      console.error('CommentModal: Cannot submit comment - request is null');
+      return;
+    }
 
-    setIsSubmitting(true);
-    onAddComment(request.id, comment.trim(), isAdmin);
-    onClose();
+    try {
+      setIsSubmitting(true);
+      console.log('CommentModal: Calling onAddComment with:', { requestId: request.id, comment: comment.trim(), isAdmin });
+      await onAddComment(request.id, comment.trim(), isAdmin);
+      console.log('CommentModal: Comment added successfully');
+      onClose();
+    } catch (error) {
+      console.error('CommentModal: Error submitting comment:', error);
+      setIsSubmitting(false);
+      alert('Failed to save comment. Please try again.');
+    }
   };
 
   // Note: getCurrentComment function is available for future use
@@ -53,7 +75,12 @@ const CommentModal: React.FC<CommentModalProps> = ({
       : 'Add a comment about your request...';
   };
 
-  if (!isOpen || !request) return null;
+  if (!isOpen) return null;
+  
+  if (!request) {
+    console.error('CommentModal: request prop is null or undefined');
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -93,7 +120,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 </span>
               </p>
               <p>
-                <span className="font-medium">Requested on:</span> {request.requestDate.toLocaleDateString()}
+                <span className="font-medium">Requested on:</span> {formatDate(request.requestDate)}
               </p>
             </div>
           </div>

@@ -209,12 +209,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onClearSearch, isLoadin
                     className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors text-left"
                   >
                     <div className="flex-shrink-0">
-                      <ImageWithFallback
-                        src={tmdbApi.getPosterUrl(suggestion.poster_path)}
-                        alt={getTitle(suggestion)}
-                        className="w-12 h-16 object-cover rounded"
-                        fallbackSrc="/placeholder-poster.svg"
-                      />
+                      <div className={`w-12 h-16 flex items-center justify-center rounded ${
+                        suggestion.media_type === 'movie' ? 'bg-red-50' : 'bg-indigo-50'
+                      }`}>
+                        <ImageWithFallback
+                          src={tmdbApi.getPosterUrl(suggestion.poster_path)}
+                          alt={getTitle(suggestion)}
+                          className="w-full h-full object-contain rounded"
+                          fallbackSrc="/placeholder-poster.svg"
+                        />
+                      </div>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2">

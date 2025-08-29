@@ -98,12 +98,16 @@ const RequestCard: React.FC<RequestCardProps> = ({
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200 border border-gray-100">
       <div className="flex">
         <div className="flex-shrink-0">
-          <ImageWithFallback
-            src={tmdbApi.getPosterUrl(request.posterPath)}
-            alt={request.title}
-            className="w-20 h-28 object-cover"
-            fallbackSrc="/placeholder-poster.svg"
-          />
+          <div className={`w-24 h-36 flex items-center justify-center ${
+            request.type === 'movie' ? 'bg-red-50' : 'bg-indigo-50'
+          }`}>
+            <ImageWithFallback
+              src={tmdbApi.getPosterUrl(request.posterPath)}
+              alt={request.title}
+              className="w-full h-full object-contain"
+              fallbackSrc="/placeholder-poster.svg"
+            />
+          </div>
         </div>
         
         <div className="flex-1 p-4 flex flex-col h-full">
@@ -112,15 +116,16 @@ const RequestCard: React.FC<RequestCardProps> = ({
               {request.title}
             </h3>
             <div className="flex space-x-2 ml-2">
-              {getTypeBadge(request.type)}
               {getStatusBadge(request.status)}
             </div>
           </div>
           
           <div className="flex-1 space-y-1 text-sm text-gray-600">
-            <p>
-              <span className="font-medium">Requested by:</span> {request.requesterName}
-            </p>
+            <div className="flex items-center space-x-2 mb-2">
+              {getTypeBadge(request.type)}
+              <span className="text-gray-500">•</span>
+              <span>Requested by {request.requesterName}</span>
+            </div>
             <p>
               <span className="font-medium">Requested on:</span> {formatDate(request.requestDate)}
             </p>

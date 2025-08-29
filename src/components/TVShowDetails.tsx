@@ -196,12 +196,14 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = ({ show, onRequest, onGoToRe
 
           {/* Show Info */}
           <div className="flex items-start space-x-6 mb-8">
-            <ImageWithFallback
-              src={tmdbApi.getPosterUrl(show.poster_path)}
-              alt={show.name || show.title || 'Unknown Show'}
-              className="w-32 h-48 object-cover rounded-lg"
-              fallbackSrc="/placeholder-poster.svg"
-            />
+            <div className="w-32 h-48 flex items-center justify-center bg-indigo-50 rounded-lg">
+              <ImageWithFallback
+                src={tmdbApi.getPosterUrl(show.poster_path)}
+                alt={show.name || show.title || 'Unknown Show'}
+                className="w-full h-full object-contain rounded-lg"
+                fallbackSrc="/placeholder-poster.svg"
+              />
+            </div>
             <div className="flex-1">
               <h3 className="text-xl font-semibold mb-2">{show.name || show.title}</h3>
               {showDetails && (
@@ -242,12 +244,14 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = ({ show, onRequest, onGoToRe
                     onClick={() => loadSeasonDetails(season)}
                   >
                                          <div className="flex items-start space-x-3">
-                       <ImageWithFallback
-                         src={tmdbApi.getPosterUrl(season.poster_path)}
-                         alt={season.name}
-                         className="w-16 h-24 object-cover rounded"
-                         fallbackSrc="/placeholder-poster.svg"
-                       />
+                       <div className="w-16 h-24 flex items-center justify-center bg-indigo-50 rounded">
+                         <ImageWithFallback
+                           src={tmdbApi.getPosterUrl(season.poster_path)}
+                           alt={season.name}
+                           className="w-full h-full object-contain rounded"
+                           fallbackSrc="/placeholder-poster.svg"
+                         />
+                       </div>
                       <div className="flex-1">
                         <h4 className="font-medium">{season.name}</h4>
                         <p className="text-sm text-gray-600">
@@ -288,18 +292,20 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = ({ show, onRequest, onGoToRe
               <h3 className="text-lg font-semibold mb-4">
                 Episodes - {selectedSeason.name}
               </h3>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
+              <div className="space-y-3">
                 {seasonDetails.episodes.map((episode: TVEpisode) => (
                                      <div
                      key={episode.id}
                      className="flex items-start space-x-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
                    >
-                     <ImageWithFallback
-                       src={tmdbApi.getPosterUrl(episode.still_path)}
-                       alt={episode.name}
-                       className="w-20 h-12 object-cover rounded"
-                       fallbackSrc="/placeholder-poster.svg"
-                     />
+                     <div className="w-20 h-12 flex items-center justify-center bg-indigo-50 rounded">
+                       <ImageWithFallback
+                         src={tmdbApi.getPosterUrl(episode.still_path)}
+                         alt={episode.name}
+                         className="w-full h-full object-contain rounded"
+                         fallbackSrc="/placeholder-poster.svg"
+                       />
+                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <h4 className="font-medium">

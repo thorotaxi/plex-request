@@ -337,14 +337,22 @@ const App: React.FC = () => {
    * @param isAdmin - Whether this is an admin comment
    */
   const handleSaveComment = async (requestId: string, comment: string, isAdmin: boolean) => {
+    console.log('App: handleSaveComment called with:', { requestId, comment, isAdmin });
     try {
-      await apiService.addComment(requestId, comment, isAdmin);
+      console.log('App: Calling apiService.addComment...');
+      const result = await apiService.addComment(requestId, comment, isAdmin);
+      console.log('App: Comment added successfully:', result);
+      
       // Reload requests from API
+      console.log('App: Reloading requests...');
       const updatedRequests = await apiService.getRequests();
+      console.log('App: Updated requests:', updatedRequests);
       setRequests(updatedRequests);
+      console.log('App: Requests reloaded successfully');
     } catch (error) {
       console.error('Failed to add comment:', error);
       alert('Failed to add comment. Please try again.');
+      throw error; // Re-throw to let the CommentModal handle it
     }
   };
 

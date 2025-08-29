@@ -117,7 +117,7 @@ export interface CommentModalProps {
   isOpen: boolean;
   onClose: () => void;
   request: MediaRequest | null;
-  onAddComment: (requestId: string, comment: string, isAdmin: boolean) => void;
+  onAddComment: (requestId: string, comment: string, isAdmin: boolean) => Promise<void>;
   isAdmin: boolean;
 }
 

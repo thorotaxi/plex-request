@@ -152,22 +152,15 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             key={`${result.media_type}-${result.id}-${index}`}
             className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 flex flex-col"
           >
-            <div className="relative">
+            <div className={`h-64 flex items-center justify-center ${
+              result.media_type === 'movie' ? 'bg-red-50' : 'bg-indigo-50'
+            }`}>
               <ImageWithFallback
                 src={tmdbApi.getPosterUrl(result.poster_path, 'w500', searchQuery ? `search-${searchQuery.replace(/\s+/g, '-')}-${index}` : undefined)}
                 alt={getTitle(result)}
-                className="w-full h-64 object-cover"
+                className="w-full h-full object-contain"
                 fallbackSrc="/placeholder-poster.svg"
               />
-              <div className="absolute top-2 right-2">
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                  result.media_type === 'movie' 
-                    ? 'bg-red-100 text-red-800' 
-                    : 'bg-indigo-100 text-indigo-800'
-                }`}>
-                  {result.media_type === 'movie' ? 'Movie' : 'TV Show'}
-                </span>
-              </div>
             </div>
             
             <div className="p-4 flex flex-col flex-1">
@@ -175,9 +168,19 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
                   {getTitle(result)}
                 </h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  {getReleaseYear(result)}
-                </p>
+                <div className="flex items-center space-x-2 mb-3">
+                  <p className="text-sm text-gray-600">
+                    {getReleaseYear(result)}
+                  </p>
+                  <span className="text-gray-500">•</span>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                    result.media_type === 'movie' 
+                      ? 'bg-red-100 text-red-800' 
+                      : 'bg-indigo-100 text-indigo-800'
+                  }`}>
+                    {result.media_type === 'movie' ? 'Movie' : 'TV Show'}
+                  </span>
+                </div>
                 
                 {result.overview && (
                   <p className="text-sm text-gray-700 mb-4 line-clamp-3">
