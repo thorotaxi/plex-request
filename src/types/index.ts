@@ -120,3 +120,4 @@ export interface CommentModalProps {
   onAddComment: (requestId: string, comment: string, isAdmin: boolean) => void;
   isAdmin: boolean;
 }
+

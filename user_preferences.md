@@ -38,3 +38,4 @@
 - User has experienced issues with chat interface appearing to "hang" during background processes
 - Solution is to use appropriate PowerShell commands and immediate acknowledgment
 - This preference should be applied to all future terminal interactions
+
