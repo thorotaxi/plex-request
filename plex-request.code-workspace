@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "Plex Request Tool",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "git.scanRepositories": [
+      "."
+    ],
+    "git.autoRepositoryDetection": false,
+    "git.detectSubmodules": false,
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.git": false
+    }
+  }
+}
