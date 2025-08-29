@@ -11,9 +11,18 @@
     ],
     "git.autoRepositoryDetection": false,
     "git.detectSubmodules": false,
+    "git.ignoreLimitWarning": true,
+    "git.ignoreSubmodules": true,
     "files.exclude": {
       "**/node_modules": true,
-      "**/.git": false
+      "**/.git": false,
+      "../**": true
+    },
+    "search.exclude": {
+      "../**": true
+    },
+    "files.watcherExclude": {
+      "../**": true
     }
   }
 }
