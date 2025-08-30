@@ -24,6 +24,7 @@ const RequestList: React.FC<RequestListProps> = ({
 }) => {
   const [filterRequester, setFilterRequester] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'new' | 'pending' | 'complete'>('all');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const requestsPerPage = 25;
 
@@ -51,8 +52,12 @@ const RequestList: React.FC<RequestListProps> = ({
         
         return true;
       })
-      .sort((a, b) => new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()); // Most recent first
-  }, [requests, filterRequester, filterStatus]);
+      .sort((a, b) => {
+        const dateA = new Date(a.requestDate).getTime();
+        const dateB = new Date(b.requestDate).getTime();
+        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+      });
+  }, [requests, filterRequester, filterStatus, sortOrder]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedRequests.length / requestsPerPage);
@@ -74,6 +79,11 @@ const RequestList: React.FC<RequestListProps> = ({
   const handleStatusFilterChange = (value: 'all' | 'new' | 'pending' | 'complete') => {
     setFilterStatus(value);
     setCurrentPage(1); // Reset to first page when filtering
+  };
+
+  const handleSortOrderChange = (order: 'newest' | 'oldest') => {
+    setSortOrder(order);
+    setCurrentPage(1); // Reset to first page when sorting
   };
 
   const handlePageChange = (page: number) => {
@@ -98,7 +108,7 @@ const RequestList: React.FC<RequestListProps> = ({
            </div>
         </div>
         
-        {/* Filters */}
+        {/* Filters and Sort */}
         <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-4">
           <div>
             <label htmlFor="requesterFilter" className="block text-sm font-medium text-gray-700 mb-1">
@@ -129,10 +139,25 @@ const RequestList: React.FC<RequestListProps> = ({
               onChange={(e) => handleStatusFilterChange(e.target.value as 'all' | 'pending' | 'complete')}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-                             <option value="all">All Status</option>
-               <option value="new">New</option>
-               <option value="pending">Pending</option>
-               <option value="complete">Complete</option>
+              <option value="all">All Status</option>
+              <option value="new">New</option>
+              <option value="pending">Pending</option>
+              <option value="complete">Complete</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-1">
+              Sort Order
+            </label>
+            <select
+              id="sortOrder"
+              value={sortOrder}
+              onChange={(e) => handleSortOrderChange(e.target.value as 'newest' | 'oldest')}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
             </select>
           </div>
         </div>

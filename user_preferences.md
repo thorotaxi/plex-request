@@ -34,8 +34,32 @@
 - **Immediate Acknowledgment**: Don't wait for background processes to "complete"
 - **Service Testing**: Verify services are working after startup
 
+## Deployment Awareness Preferences
+
+### Schema and Database Changes
+- **CRITICAL**: Always provide explicit heads-up when making changes that affect deployment
+- **Schema Changes**: Alert user immediately when database schema is modified
+- **API Changes**: Notify when API endpoints are added, modified, or removed
+- **Configuration Changes**: Flag when environment variables or config files change
+- **Dependency Changes**: Warn when package.json dependencies are modified
+
+### Deployment Impact Assessment
+- **Before Making Changes**: Consider if changes will complicate redeployment
+- **Data Migration**: Alert when data migration might be needed
+- **Breaking Changes**: Explicitly warn about any breaking changes
+- **Backup Requirements**: Remind about backup needs for production data
+
+### Communication Protocol
+- **Explicit Warnings**: Use clear language like "⚠️ DEPLOYMENT IMPACT" or "🚨 SCHEMA CHANGE"
+- **Explanation**: Always explain why the change is needed and its impact
+- **Options**: Provide alternatives when possible
+- **Timing**: Flag changes that require coordinated deployment timing
+
 ## Notes
 - User has experienced issues with chat interface appearing to "hang" during background processes
 - Solution is to use appropriate PowerShell commands and immediate acknowledgment
 - This preference should be applied to all future terminal interactions
+- **NEW**: User is doing rapid development with minimal direct code changes
+- **NEW**: Schema and deployment changes may not be immediately obvious to user
+- **NEW**: Always err on the side of over-communication about deployment impacts
 

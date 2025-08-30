@@ -1,11 +1,12 @@
 import { SearchResult, TMDbSearchResponse, TMDbTVShowResponse, TMDbSeasonResponse } from '../types';
+import { getApiBaseUrl } from '../config/api';
 
 /**
  * TMDb API service for searching movies and TV shows
  * Note: You'll need to get a TMDb API key from https://www.themoviedb.org/settings/api
  */
 class TMDbApiService {
-  private readonly baseUrl = 'https://api.themoviedb.org/3';
+  private readonly baseUrl = getApiBaseUrl().replace('/api', '');
   private readonly apiKey = process.env.REACT_APP_TMDB_API_KEY;
 
   /**
@@ -15,19 +16,17 @@ class TMDbApiService {
    * @returns Promise with search results
    */
   async searchMulti(query: string, page: number = 1): Promise<SearchResult[]> {
-    console.log('API Key available:', !!this.apiKey);
-    console.log('API Key length:', this.apiKey?.length || 0);
+    console.log('🔍 Searching via backend proxy...');
     
-    if (!this.apiKey) {
-      console.warn('TMDb API key not found. Using mock data.');
-      return this.getMockSearchResults(query);
-    }
-
     try {
-      const url = `${this.baseUrl}/search/multi?api_key=${this.apiKey}&query=${encodeURIComponent(query)}&page=${page}&include_adult=false`;
-      console.log('Making request to:', url.replace(this.apiKey, '***'));
+      const url = `${this.baseUrl}/api/tmdb/search?query=${encodeURIComponent(query)}&page=${page}`;
+      console.log('Making request to:', url);
       
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          'bypass-tunnel-reminder': 'true'
+        }
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -36,13 +35,7 @@ class TMDbApiService {
       const data: TMDbSearchResponse = await response.json();
       console.log('TMDb response:', data);
       
-      // Filter out non-movie and non-tv results
-      const filteredResults = data.results.filter(
-        (result: SearchResult) => result.media_type === 'movie' || result.media_type === 'tv'
-      );
-      
-      console.log('Filtered results:', filteredResults);
-      return filteredResults;
+      return data.results || [];
     } catch (error) {
       console.error('Error searching TMDb:', error);
       return this.getMockSearchResults(query);
@@ -70,7 +63,12 @@ class TMDbApiService {
   async getTVShowDetails(showId: number): Promise<TMDbTVShowResponse> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/tv/${showId}?api_key=${this.apiKey}&append_to_response=seasons`
+        `${this.baseUrl}/api/tmdb/tv/${showId}`,
+        {
+          headers: {
+            'bypass-tunnel-reminder': 'true'
+          }
+        }
       );
 
       if (!response.ok) {
@@ -93,7 +91,12 @@ class TMDbApiService {
   async getSeasonDetails(showId: number, seasonNumber: number): Promise<TMDbSeasonResponse> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/tv/${showId}/season/${seasonNumber}?api_key=${this.apiKey}`
+        `${this.baseUrl}/api/tmdb/tv/${showId}/season/${seasonNumber}`,
+        {
+          headers: {
+            'bypass-tunnel-reminder': 'true'
+          }
+        }
       );
 
       if (!response.ok) {

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
@@ -234,6 +235,88 @@ app.get('/api/users', (req, res) => {
 app.get('/api/health', (req, res) => {
   console.log('📥 GET /api/health - Health check request');
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// TMDB API proxy endpoints
+const TMDB_API_KEY = process.env.TMDB_API_KEY || '4372e0039cf875a6cf1eb9db96a10c3e';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+
+console.log('🔑 TMDB API Key loaded:', TMDB_API_KEY ? 'YES' : 'NO');
+console.log('🔑 TMDB API Key length:', TMDB_API_KEY ? TMDB_API_KEY.length : 0);
+
+// Search multi endpoint
+app.get('/api/tmdb/search', async (req, res) => {
+  const { query, page = 1 } = req.query;
+  
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter is required' });
+  }
+  
+  if (!TMDB_API_KEY) {
+    return res.status(500).json({ error: 'TMDB API key not configured' });
+  }
+  
+  try {
+    const url = `${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}&include_adult=false`;
+    console.log('🔍 TMDB Search:', url.replace(TMDB_API_KEY, '***'));
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    // Filter out non-movie and non-tv results
+    const filteredResults = data.results.filter(
+      (result) => result.media_type === 'movie' || result.media_type === 'tv'
+    );
+    
+    res.json({ ...data, results: filteredResults });
+  } catch (error) {
+    console.error('❌ TMDB search error:', error);
+    res.status(500).json({ error: 'Failed to search TMDB' });
+  }
+});
+
+// TV show details endpoint
+app.get('/api/tmdb/tv/:showId', async (req, res) => {
+  const { showId } = req.params;
+  
+  if (!TMDB_API_KEY) {
+    return res.status(500).json({ error: 'TMDB API key not configured' });
+  }
+  
+  try {
+    const url = `${TMDB_BASE_URL}/tv/${showId}?api_key=${TMDB_API_KEY}&append_to_response=seasons`;
+    console.log('📺 TMDB TV Details:', url.replace(TMDB_API_KEY, '***'));
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    res.json(data);
+  } catch (error) {
+    console.error('❌ TMDB TV details error:', error);
+    res.status(500).json({ error: 'Failed to fetch TV show details' });
+  }
+});
+
+// Season details endpoint
+app.get('/api/tmdb/tv/:showId/season/:seasonNumber', async (req, res) => {
+  const { showId, seasonNumber } = req.params;
+  
+  if (!TMDB_API_KEY) {
+    return res.status(500).json({ error: 'TMDB API key not configured' });
+  }
+  
+  try {
+    const url = `${TMDB_BASE_URL}/tv/${showId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}`;
+    console.log('📺 TMDB Season Details:', url.replace(TMDB_API_KEY, '***'));
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    res.json(data);
+  } catch (error) {
+    console.error('❌ TMDB season details error:', error);
+    res.status(500).json({ error: 'Failed to fetch season details' });
+  }
 });
 
 // Start server
