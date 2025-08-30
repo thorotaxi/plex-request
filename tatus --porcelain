@@ -1,0 +1,5 @@
+[33m6603a1a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Update session summary for next session
+[33m539920c[m Add session summary for context continuity
+[33mdbc9be8[m[33m ([m[1;33mtag: [m[1;33mv1.1.0[m[33m)[m Update deployment packages with latest features - Update docker-deployment with latest backend and frontend builds - Update deployment-package with latest backend and frontend builds - Exclude local development switching scripts from deployment packages
+[33m9046c25[m Add environment switching system and enhanced features - Add switch-env.ps1 for seamless local/tunnel switching - Add update-api-url.ps1 for API config updates - Add sort toggle functionality to RequestList - Enhance API services with better error handling - Update backend with improved logging and health checks - Add user preferences documentation
+[33mea9082e[m Stable version v1.1 - minor interface improvements and bug fixes
