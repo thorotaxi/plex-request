@@ -11,6 +11,10 @@
   ],
   "routes": [
     {
+      "src": "/placeholder-poster.svg",
+      "dest": "/placeholder-poster.svg"
+    },
+    {
       "src": "/static/(.*)",
       "dest": "/static/$1"
     },
