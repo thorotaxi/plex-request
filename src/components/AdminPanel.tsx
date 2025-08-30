@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { apiService } from '../services/apiService';
 import { MediaRequest } from '../types';
 
 interface AdminPanelProps {
